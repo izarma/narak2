@@ -9,8 +9,7 @@ use bevy::{prelude::*, state::state::FreelyMutableState};
 
 use crate::{
     asset_tracking::LoadResource,
-    audio::music,
-    audio::sound_effect,
+    audio::{music, sound_effect},
     game::{
         animation::AnimationAssets,
         level::{
@@ -20,7 +19,10 @@ use crate::{
         player::{PLAYER_Z_TRANSLATION, player},
     },
     menus::Menu,
-    screens::Screen,
+    screens::{
+        Screen,
+        gameplay::{LOADING_FADE_DURATION_SECS, LOADING_SPLASH_DURATION_SECS, LoadingFadeInOut},
+    },
     theme::palette::LABEL_TEXT,
 };
 
@@ -275,5 +277,24 @@ pub fn spawn_level(
             ],));
         }
     }
+    commands.spawn((
+        Name::new("Level Transition Overlay"),
+        LevelEntryOverlay,
+        Node {
+            width: Val::Percent(100.0),
+            height: Val::Percent(100.0),
+            ..default()
+        },
+        BackgroundColor(Color::BLACK),
+        GlobalZIndex(10),
+        LoadingFadeInOut {
+            total_duration: LOADING_SPLASH_DURATION_SECS,
+            fade_duration: LOADING_FADE_DURATION_SECS,
+            t: LOADING_FADE_DURATION_SECS,
+        },
+    ));
     time.unpause();
 }
+
+#[derive(Component)]
+pub struct LevelEntryOverlay;
