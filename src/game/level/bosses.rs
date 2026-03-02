@@ -190,7 +190,7 @@ pub fn eye_boss(xy: Vec2, anim_assets: &AnimationAssets) -> impl Bundle {
                 cooldown_timer: Timer::from_seconds(1.0, TimerMode::Repeating),
                 duration: Timer::from_seconds(3.0, TimerMode::Once),
                 shooting_pattern: vec![ShootingPattern::Random {
-                    count: 9,
+                    count: 5,
                     arc: 10.0_f32.to_radians(),
                 }],
             }),

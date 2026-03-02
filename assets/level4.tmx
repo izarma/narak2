@@ -2,6 +2,91 @@
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="40" height="60" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" name="Tiles-updated" tilewidth="16" tileheight="16" tilecount="200" columns="20">
   <image source="Tiles.png" width="320" height="160"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="20">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="21">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="22">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="25">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="40">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="41">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="42">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="43">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="44">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="45">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
   <tile id="50">
    <properties>
     <property name="ProjectilePassthrough" type="bool" value="true"/>
@@ -18,6 +103,70 @@
     <object id="1" x="-0.000514106" y="-0.000514106" width="16" height="16"/>
    </objectgroup>
   </tile>
+  <tile id="60">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+    <object id="2" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+    <object id="3" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="61">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="62">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="63">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="64">
+   <properties>
+    <property name="ProjectilePassthrough" type="bool" value="true"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="65">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+    <object id="2" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+   </objectgroup>
+  </tile>
   <tile id="70">
    <properties>
     <property name="ProjectilePassthrough" type="bool" value="true"/>
@@ -32,6 +181,137 @@
    </properties>
    <objectgroup draworder="index" id="2">
     <object id="1" x="-0.000514106" y="-0.000514106" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="101">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="102">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="103">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="104">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="105">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="120">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="121">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="122">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="123">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="125">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="140">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="141">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="142">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="143">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="144">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="145">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="160">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="161">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="162">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16">
+     <properties>
+      <property name="ProjectilePassthrough" type="bool" value="true"/>
+     </properties>
+    </object>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="163">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="164">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="165">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
    </objectgroup>
   </tile>
  </tileset>
@@ -95,11 +375,11 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71,72,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71,51,51,0,0,0,0,0,0,0,0,0,0,51,52,71,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71,71,71,71,71,51,51,71,72,71,71,71,71,72,72,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,52,51,71,71,71,71,72,51,52,51,52,51,52,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,72,71,72,71,72,71,72,71,72,71,72,71,72
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,51,71,71,71,71,72,51,52,51,52,51,52,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,71,72,71,72,71,72,71,72,71,72,71,72
 </data>
  </layer>
- <layer id="5" name="ground" width="40" height="60">
+ <layer id="5" name="ground" width="40" height="60" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,47,49,49,49,49,49,49,28,29,29,29,29,29,49,30,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,7,32,69,69,28,29,29,29,29,29,49,49,49,49,69,31,10,0,0,0,0,0,0,0,0,0,0,0,
@@ -163,7 +443,7 @@
 48,48,48,68,68,68,88,88,88,88,88,89,89,28,48,68,68,68,68,88,68,68,68,68,68,68,90,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="3" name="colliders" width="40" height="60">
+ <layer id="3" name="colliders" width="40" height="60" visible="0">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
