@@ -23,7 +23,10 @@ fn spawn_camera(mut commands: Commands, asset_server: Res<AssetServer>) {
         Name::new("Camera"),
         Camera2d,
         Projection::Orthographic(OrthographicProjection {
-            scaling_mode: ScalingMode::WindowSize,
+            scaling_mode: ScalingMode::Fixed {
+                width: 1280.0,
+                height: 720.0,
+            },
             scale: 0.5,
             ..OrthographicProjection::default_2d()
         }),
