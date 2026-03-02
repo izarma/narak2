@@ -435,9 +435,9 @@ pub fn eye_enemy(xy: Vec2, anim_assets: &AnimationAssets) -> impl Bundle {
         Enemy::new_random(6) // GDD "Enemies to have 1-5 lives then maybe?"
             .with_shooting_range(300.)
             .with_attack(EnemyAttack {
-                cooldown_timer: Timer::from_seconds(2.8, TimerMode::Repeating),
-                duration: Timer::from_seconds(3.0, TimerMode::Once),
-                shooting_pattern: vec![ShootingPattern::Ring { count: 5 }],
+                cooldown_timer: Timer::from_seconds(4.8, TimerMode::Repeating),
+                duration: Timer::from_seconds(5.0, TimerMode::Once),
+                shooting_pattern: vec![ShootingPattern::Ring { count: 4 }],
             })
             .with_attack(EnemyAttack {
                 cooldown_timer: Timer::from_seconds(0.2, TimerMode::Repeating),

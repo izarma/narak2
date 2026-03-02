@@ -10,13 +10,17 @@ use crate::{
 };
 
 pub const PROJECTILE_Z_TRANSLATION: f32 = PLAYER_Z_TRANSLATION;
-pub const SOURCE_Z_TRANSLATION: f32 = PLAYER_Z_TRANSLATION;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, update_sources.in_set(PausableSystems));
     app.add_systems(
         FixedUpdate,
-        (update_cools, update_projectiles, restore_ammo).in_set(PausableSystems),
+        (update_cools, update_projectiles, apply_recall_homing).in_set(PausableSystems),
+    );
+    // Run after collision so we see Friendly removals when projectiles hit enemies/walls.
+    app.add_systems(
+        FixedUpdate,
+        restore_ammo.in_set(PausableSystems).after(on_collision),
     );
 }
 
@@ -164,10 +168,10 @@ pub fn enemy_basic_bullet<HostilityComponent: Component + Default>(
         Name::new("Enemy Basic Projectile"),
         Projectile {
             direction,
-            dues: vec![
-                Due::BounceDown(2),
-                Due::Lifespan(Timer::from_seconds(projectile_life, TimerMode::Once)),
-            ],
+            dues: vec![Due::Lifespan(Timer::from_seconds(
+                projectile_life,
+                TimerMode::Once,
+            ))],
         },
         HostilityComponent::default(),
         LinearVelocity(speed * direction.as_vec2()),
@@ -205,10 +209,10 @@ pub fn boss_basic_bullet<HostilityComponent: Component + Default>(
         Name::new("Enemy Basic Projectile"),
         Projectile {
             direction,
-            dues: vec![
-                Due::BounceDown(2),
-                Due::Lifespan(Timer::from_seconds(projectile_life, TimerMode::Once)),
-            ],
+            dues: vec![Due::Lifespan(Timer::from_seconds(
+                projectile_life,
+                TimerMode::Once,
+            ))],
         },
         HostilityComponent::default(),
         LinearVelocity(speed * direction.as_vec2()),
@@ -349,16 +353,20 @@ pub fn lifespan_projectile<HostilityComponent: Component + Default>(
 fn update_projectiles(
     mut commands: Commands,
     time: Res<Time>,
-    projectile_query: Query<(Entity, &mut Projectile)>,
+    projectile_query: Query<(Entity, &mut Projectile, &mut LinearVelocity, Has<Friendly>)>,
 ) {
     let mut despawned = Vec::<Entity>::new();
-    for (proj_entity, mut projectile) in projectile_query {
+    for (proj_entity, mut projectile, mut velocity, is_friendly) in projectile_query {
         for due in projectile.dues.iter_mut() {
             use Due::*;
             match due {
                 Lifespan(timer) => {
                     if timer.is_finished() {
-                        despawned.push(proj_entity);
+                        if is_friendly {
+                            velocity.0 = Vec2::ZERO;
+                        } else {
+                            despawned.push(proj_entity);
+                        }
                         break;
                     } else {
                         timer.tick(time.delta());
@@ -434,5 +442,28 @@ impl Default for Source {
         Self {
             direction: Dir2::NEG_Y,
         }
+    }
+}
+
+#[derive(Component)]
+#[require(ActiveCollisionHooks::FILTER_PAIRS)]
+pub struct Recalled;
+
+fn apply_recall_homing(
+    mut query: Query<(&mut LinearVelocity, &Transform), With<Recalled>>,
+    player_query: Single<&Transform, With<Player>>,
+) {
+    let player_transform = player_query.into_inner();
+    let player_pos = player_transform.translation.xy();
+
+    for (mut velocity, proj_transform) in &mut query {
+        let proj_pos = proj_transform.translation.xy();
+
+        // Calculate direction to player
+        let direction = (player_pos - proj_pos).normalize_or_zero();
+
+        // You can make the recall speed faster than the throw speed (e.g., 500.0)
+        let recall_speed = 500.0;
+        velocity.0 = direction * recall_speed;
     }
 }

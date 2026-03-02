@@ -46,21 +46,21 @@ impl Default for Player {
             max_life: 3,
             life: 3, // "3 lives on player?"
             cool: 0.3,
-            max_ammo: 3,
-            ammo: 3,
+            max_ammo: 1,
+            ammo: 1,
         }
     }
 }
 
 impl Player {
     pub fn increment_ammo(&mut self, n: usize) {
-        self.ammo += n;
+        self.ammo = (self.ammo + n).min(self.max_ammo);
     }
 
     pub fn with_stats(stats: usize) -> Self {
         Self {
-            max_ammo: stats,
-            ammo: stats,
+            max_ammo: stats / 3,
+            ammo: stats / 3,
             max_life: stats,
             life: stats,
             ..default()

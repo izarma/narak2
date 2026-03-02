@@ -27,12 +27,8 @@ use crate::{
     },
 };
 use avian2d::prelude::*;
-use bevy::{
-    ecs::system::SystemParam, input::common_conditions::input_just_pressed, prelude::*,
-    window::PrimaryWindow,
-};
+use bevy::{ecs::system::SystemParam, input::common_conditions::input_just_pressed, prelude::*};
 use rand::seq::IndexedRandom;
-use std::ops::DerefMut;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(
@@ -40,7 +36,7 @@ pub(super) fn plugin(app: &mut App) {
         (
             apply_player_movement,
             apply_screen_wrap,
-            apply_player_throw.run_if(input_just_pressed(KeyCode::Space)),
+            apply_player_throw.run_if(input_just_pressed(MouseButton::Left)),
         )
             .in_set(AppSystems::Update)
             .in_set(PausableSystems),
@@ -75,10 +71,30 @@ impl Default for MovementController {
 pub struct PassthroughHook<'w, 's> {
     projectile_query: Query<'w, 's, &'static Projectile>,
     passthrough_query: Query<'w, 's, &'static ProjectilePassthrough>,
+    recalled_query: Query<'w, 's, &'static Recalled>,
+    player_query: Query<'w, 's, &'static Player>,
 }
 
 impl CollisionHooks for PassthroughHook<'_, '_> {
     fn filter_pairs(&self, collider1: Entity, collider2: Entity, _commands: &mut Commands) -> bool {
+        // Recalled Projectile
+        let is_c1_recalled = self.recalled_query.contains(collider1);
+        let is_c2_recalled = self.recalled_query.contains(collider2);
+
+        if is_c1_recalled || is_c2_recalled {
+            let is_c1_player = self.player_query.contains(collider1);
+            let is_c2_player = self.player_query.contains(collider2);
+
+            // If one entity is Recalled, the OTHER must be the player to collide.
+            // Otherwise, ignore the collision entirely.
+            if is_c1_recalled && !is_c2_player {
+                return false;
+            }
+            if is_c2_recalled && !is_c1_player {
+                return false;
+            }
+        }
+
         let is_projectile1 = self.projectile_query.get(collider1).is_ok();
         let is_projectile2 = self.projectile_query.get(collider2).is_ok();
 
@@ -96,13 +112,20 @@ impl CollisionHooks for PassthroughHook<'_, '_> {
 }
 
 #[cfg_attr(any(), rustfmt::skip)]
-fn on_collision(
+pub(crate) fn on_collision(
     mut commands: Commands,
     anim_assets: Res<AnimationAssets>,
     mut collision_reader: MessageReader<CollisionStart>,
     mut enemy_query: Query<(Entity, &mut Enemy, Option<&Boss>, Option<&Name>)>,
     mut player_query: Query<(Entity, &mut Player)>,
-    mut projectile_query: Query<(Entity, &mut Projectile, &mut Transform, Has<Friendly>, Has<Hostile>)>,
+    mut projectile_query: Query<(
+        Entity,
+        &mut Projectile,
+        &mut Transform,
+        &mut LinearVelocity,
+        Has<Friendly>,
+        Has<Hostile>,
+    )>,
     mut something_else_query: Query<&ProjectilePassthrough>,
 ) {
     for msg in collision_reader.read() {
@@ -125,7 +148,19 @@ fn on_collision(
             is_c1_projectile.unwrap_or(projectile_query.contains(c1)),
             is_c2_projectile.unwrap_or(projectile_query.contains(c2)),
         ) {
-            (true, true) => {commands.spawn(sound_effect(anim_assets.projectiles.ricochet.choose(&mut rand::rng()).unwrap().clone()));},
+            (true, true) => {
+                commands.spawn(sound_effect(anim_assets.projectiles.ricochet.choose(&mut rand::rng()).unwrap().clone()));
+                // If a Friendly projectile hits a Hostile projectile, destroy the Hostile one
+                                if let Ok((_, _, _, _, c1_friendly, c1_hostile)) = projectile_query.get(c1) {
+                                    if let Ok((_, _, _, _, c2_friendly, c2_hostile)) = projectile_query.get(c2) {
+                                        if c1_friendly && c2_hostile {
+                                            commands.entity(c2).despawn();
+                                        } else if c2_friendly && c1_hostile {
+                                            commands.entity(c1).despawn();
+                                        }
+                                    }
+                                }
+            },
             (true, false) => on_collision_projectile_with_something_else(&mut commands, &anim_assets, &mut projectile_query, &mut something_else_query, &c1, &c2),
             (false, true) =>  on_collision_projectile_with_something_else(&mut commands, &anim_assets, &mut projectile_query, &mut something_else_query, &c2, &c1),
             (false, false) => {/* else vs else */}
@@ -143,6 +178,7 @@ fn on_collision_player(
         Entity,
         &mut Projectile,
         &mut Transform,
+        &mut LinearVelocity,
         Has<Friendly>,
         Has<Hostile>,
     )>,
@@ -153,7 +189,7 @@ fn on_collision_player(
 ) -> bool {
     // c1 is player and c2 is projectile
     if let Ok((player_entity, mut player)) = player_query.get_mut(*c1) {
-        if let Ok((proj_entity, _, _, _, has_hostile)) = projectile_query.get(*c2) {
+        if let Ok((proj_entity, _, _, _, _, has_hostile)) = projectile_query.get(*c2) {
             if has_hostile {
                 commands.entity(player_entity).insert(Red::default());
                 player.life = player.life.saturating_sub(1);
@@ -186,6 +222,7 @@ fn on_collision_enemy(
         Entity,
         &mut Projectile,
         &mut Transform,
+        &mut LinearVelocity,
         Has<Friendly>,
         Has<Hostile>,
     )>,
@@ -196,7 +233,7 @@ fn on_collision_enemy(
 ) -> bool {
     // c1 is enemy and c2 is projectile
     if let Ok((enemy_entity, mut enemy, opt_boss, opt_name)) = enemy_query.get_mut(*c1) {
-        if let Ok((proj_entity, _, _, has_friendly, _)) = projectile_query.get(*c2) {
+        if let Ok((proj_entity, _, _, _, has_friendly, _)) = projectile_query.get(*c2) {
             if has_friendly {
                 // Enemy got hit!
                 enemy.life = enemy.life.saturating_sub(1);
@@ -286,6 +323,7 @@ fn on_collision_projectile_with_something_else(
         Entity,
         &mut Projectile,
         &mut Transform,
+        &mut LinearVelocity,
         Has<Friendly>,
         Has<Hostile>,
     )>,
@@ -293,31 +331,36 @@ fn on_collision_projectile_with_something_else(
     c1: &Entity,
     c2: &Entity,
 ) {
-    if let Ok((proj_entity, mut projectile, mut transform, has_friendly, _)) =
+    if let Ok((proj_entity, mut projectile, _, mut velocity, has_friendly, _)) =
         projectile_query.get_mut(*c1)
     {
-        if let Ok(projectile_passthrough) = something_else_query.get_mut(*c2) {
+        if let Ok(_) = something_else_query.get_mut(*c2) {
             // nothing (replaced with hook)
         }
-        for due in projectile.dues.iter_mut() {
-            match due {
-                Due::BounceDown(count) => {
-                    match count {
-                        1 => {
-                            // This goes to zero: remove and restore
-                            commands.entity(proj_entity).despawn();
-                        }
-                        0 => {
-                            //panic!("Bounce Down was not set correctly");
-                            commands.entity(proj_entity).despawn(); // should not happen
-                        }
-                        _ => {
-                            *count = count.saturating_sub(1);
+        if has_friendly {
+            for due in projectile.dues.iter_mut() {
+                match due {
+                    Due::BounceDown(count) => {
+                        match count {
+                            1 => {
+                                // This goes to zero: remove and restore
+                                velocity.0 = Vec2::ZERO;
+                                // commands.entity(proj_entity).despawn();
+                            }
+                            0 => {
+                                //panic!("Bounce Down was not set correctly");
+                                commands.entity(proj_entity).despawn(); // should not happen
+                            }
+                            _ => {
+                                *count = count.saturating_sub(1);
+                            }
                         }
                     }
+                    _ => {}
                 }
-                _ => {}
             }
+        } else {
+            commands.entity(proj_entity).despawn();
         }
     }
 }
@@ -331,9 +374,10 @@ fn apply_player_movement(mut movement_query: Query<(&MovementController, &mut Li
 fn apply_player_throw(
     mut commands: Commands,
     anim_assets: Res<AnimationAssets>,
-    mut player: Single<(Entity, &Transform, &mut Player), With<Cool>>,
+    player: Single<(Entity, &Transform, &mut Player), With<Cool>>,
     global_transform: Query<&GlobalTransform>,
     camera_query: Single<(&Camera, &GlobalTransform)>,
+    projectiles: Query<Entity, (With<Projectile>, With<Friendly>, Without<Recalled>)>,
     window: Single<&Window>,
 ) {
     let (player_entity, player_transform, mut player) = player.into_inner();
@@ -373,24 +417,13 @@ fn apply_player_throw(
         ));
         player.decrement_ammo(1);
 
-        /*
-        commands.spawn(bounce_down_projectile::<Friendly>(
-            xy,
-            direction,
-            PLAYER_COLLIDER_RADIUS,
-            &anim_assets,
-        ));
-        commands.spawn(lifespan_projectile::<Friendly>(
-            xy,
-            direction,
-            PLAYER_COLLIDER_RADIUS,
-            &anim_assets,
-        ));
-        */
-
         // update cool
         commands.entity(player_entity).remove::<Cool>();
         commands.spawn(Cool::new(player.cool));
+    } else {
+        for entity in &projectiles {
+            commands.entity(entity).insert(Recalled);
+        }
     }
     // if ammo is out nah.
 }
